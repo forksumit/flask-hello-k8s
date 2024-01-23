@@ -8,16 +8,14 @@
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 ```
 
-* Use a [Buildpack](https://github.com/GoogleCloudPlatform/buildpacks) to build the container:
-
 ```sh
-gcloud builds submit --pack image=gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
+gcloud builds submit --tag=gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
 ```
 
 ## Run Locally
 
 ```sh
-docker run --rm gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
+docker run -p 8080:8080 -e PORT=8080 --rm gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
 ```
 
 ## Test
