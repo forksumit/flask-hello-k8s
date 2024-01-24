@@ -35,5 +35,5 @@ sed -i 's/GOOGLE_CLOUD_PROJECT/'${GOOGLE_CLOUD_PROJECT}'/g' deploy.yaml
 ```
 * Apply the manifest file
 ```
-kubectl apply -f deploy.y
+kubectl apply -f deploy.yaml
 ````
