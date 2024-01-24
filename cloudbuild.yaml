@@ -1,14 +1,9 @@
 steps:
 - name: 'python:3.11-slim'
-  script: |
-    #!/usr/bin/env bash
-    pip install pytest
-    pip install -r requirements.txt
-    pip install -r requirements-test.txt
-    python3 -m pytest tests/
+  args: ['bash', './ci/unit-test.sh']
 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/helloworld', '.']
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/helloworld', 'src/']
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/${PROJECT_ID}/helloworld']
@@ -16,13 +11,13 @@ steps:
 - name: 'bash'
   script: |
     #!/usr/bin/env bash
-    sed -i 's/GOOGLE_CLOUD_PROJECT/'${GOOGLE_CLOUD_PROJECT}'/g' deploy.yaml
+    sed -i 's/GOOGLE_CLOUD_PROJECT/'${GOOGLE_CLOUD_PROJECT}'/g' manifest/deploy.yaml
   env:
     - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
 
 
 - name: 'gcr.io/cloud-builders/kubectl'
-  args: ['apply', '-f', 'deploy.yaml']
+  args: ['apply', '-f', 'manifest/deploy.yaml']
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
