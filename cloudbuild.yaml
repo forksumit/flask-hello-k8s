@@ -1,6 +1,11 @@
 steps:
 - name: 'python:3.11-slim'
-  args: [ 'python3', '-m', 'pytest', 'tests/' ]
+  script: |
+    #!/usr/bin/env bash
+    pip install pytest
+    pip install -r requirements.txt
+    pip install -r requirements-test.txt
+    python3 -m pytest tests/
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/${PROJECT_ID}/helloworld', '.']
