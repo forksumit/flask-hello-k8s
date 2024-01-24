@@ -31,7 +31,7 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 * Complete the [Build](#build) step
 * Replace GOOGLE_CLOUD_PROJECT with your GCP Project ID in [deploy.yaml](deploy.yaml)
 ```
-sed -i 's/GOOGLE_CLOUD_PROJECT/${GOOGLE_CLOUD_PROJECT}/g' deploy.yaml
+sed -i 's/GOOGLE_CLOUD_PROJECT/'${GOOGLE_CLOUD_PROJECT}'/g' deploy.yaml
 ```
 * Apply the manifest file
 ```
