@@ -1,4 +1,4 @@
-# Flask Hello World on Kubernetes
+# Flask Hello World on Kubernetes via Helm
 
 ## Build
 
@@ -9,13 +9,13 @@ export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 ```
 
 ```sh
-gcloud builds submit --tag=gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld src/
+gcloud builds submit --tag=gcr.io/${GOOGLE_CLOUD_PROJECT}/flask-helloworld src/
 ```
 
 ## Run Locally
 
 ```sh
-docker run -p 8080:8080 -e PORT=8080 --rm gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
+docker run -p 8080:8080 -e PORT=8080 --rm gcr.io/${GOOGLE_CLOUD_PROJECT}/flask-helloworld
 ```
 
 ## Test
@@ -28,15 +28,11 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 
 ## Deploy
 
-### Manual
+### Helm
 * Complete the [Build](#build) step
-* Replace GOOGLE_CLOUD_PROJECT with your GCP Project ID in [manifest/deploy.yaml](manifest/deploy.yaml)
+* Install/ Upgrade a release
 ```sh
-sed -i 's/GOOGLE_CLOUD_PROJECT/'${GOOGLE_CLOUD_PROJECT}'/g' deploy.yaml
-```
-* Apply the manifest file
-```sh
-kubectl apply -f manifest/deploy.yaml
+helm upgrade --install dev ./helm/ --set gcpProjectId="${GOOGLE_CLOUD_PROJECT}" --debug
 ```
 
 ### Cloud Build
