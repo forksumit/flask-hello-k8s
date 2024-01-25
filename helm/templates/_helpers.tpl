@@ -24,6 +24,17 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Container image repository link.
+*/}}
+{{- define "flask-helloworld.imageRepository" -}}
+{{- if .Values.image.repository }}
+{{- .Values.image.repository }}
+{{- else }}
+{{- printf "%s/%s/%s" .Values.image.repositoryHost .Values.gcpProjectId ( include "flask-helloworld.name" . ) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "flask-helloworld.chart" -}}

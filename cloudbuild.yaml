@@ -3,21 +3,26 @@ steps:
   args: ['bash', './ci/unit-test.sh']
 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/flask-helloworld', 'src/']
+  args: ['build', '-t', '${_IMAGE}', 'src/']
 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/${PROJECT_ID}/flask-helloworld']
+  args: ['push', '${_IMAGE}']
 
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   script: |
     #!/usr/bin/env bash
     gcloud container clusters get-credentials ${CLOUDSDK_CONTAINER_CLUSTER} --zone ${CLOUDSDK_COMPUTE_ZONE} --project ${PROJECT_ID}
     curl https://raw.githubusercontent.com/helm/helm/release-3.14/scripts/get-helm-3 | bash
-    helm upgrade --install dev ./helm/ --set gcpProjectId=${PROJECT_ID}
+    helm upgrade --install dev ./helm/ --set gcpProjectId=${PROJECT_ID},image.repository=${IMAGE}
   env:
     - 'PROJECT_ID=${PROJECT_ID}'
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+    - 'IMAGE=${_IMAGE}'
+
+substitutions:
+  _IMAGE: 'gcr.io/${PROJECT_ID}/flask-helloworld'
 
 options:
+  dynamicSubstitutions: true
   logging: CLOUD_LOGGING_ONLY
